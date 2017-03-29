@@ -199,7 +199,7 @@ summary(lm(count ~ spray2, data = InsectSprays))$coef
   * Other group means are the itc plus their coefficient. 
 * If we omit an intercept, then it includes terms for all levels of the factor. 
   * Group means are the coefficients. 
-  * Tests are tests of whether the groups are different than zero. (Are the expected counts zero for that spray.)
+  * Tests are tests of whether the groups are different than zero. (Are the expected counts zero for that spray.) 
 * If we want comparisons between, Spray B and C, say we could refit the model with C (or B) as the reference level. 
 
 
@@ -263,6 +263,7 @@ summary(lm(Fertility ~ Agriculture + factor(CatholicBin), data = swiss))$coef
 ## Fitted lines
 ```{r, echo = FALSE, fig.width=5, fig.height=4}
 fit = lm(Fertility ~ Agriculture + factor(CatholicBin), data = swiss)
+## Good to get in habit of calling factor() on the variable, as opposed to letting R decide as levels of (0,1,2) will be viewed as regressors where 2 will be treated as twice factor of 1
 g1 = g
 g1 = g1 + geom_abline(intercept = coef(fit)[1], slope = coef(fit)[2], size = 2)
 g1 = g1 + geom_abline(intercept = coef(fit)[1] + coef(fit)[3], slope = coef(fit)[2], size = 2)
@@ -275,6 +276,11 @@ g1
 ```{r, echo = TRUE}
 summary(lm(Fertility ~ Agriculture * factor(CatholicBin), data = swiss))$coef
 ```
+
+
+Here, the (Intercept) value is the itc for mostly Protestant regions, with associated 
+slope underneath. The factor(CatholicBin)1 value is to be added to the (Intercept)[beta0]
+to find the itc of Catholic dominated regions. The slope for Catholic regions is the sum of the two slopes.
 
 ---
 ## Fitted lines
