@@ -13,7 +13,7 @@ url:
 widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
 ---
-```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F, results='hide'}
+```{r setup, cache = T, echo = F, message = F, warning = F, tidy = F, results='hide'}
 # make this an external chunk that can be included in any file
 options(width = 100)
 opts_chunk$set(message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 100, tidy = F, cache.path = '.cache/', fig.path = 'fig/')
@@ -65,6 +65,13 @@ points(x[1 : (n/2)], y[1 : (n/2)], pch = 21, col = "black", bg = "lightblue", ce
 points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon", cex = 2)
 ```
 
+- Horizontal lines show the marginal effect of group status (colors red + blue), e.g. 
+if y was bloodpressure, and we hadn't factored in x, these lines would represent the means of the indvidiauls groups.
+- You could fit model: y = beta0 + beta1*T (T = treatment indicator) + beta2 + epsilon 
+where beta1 represents changes in the intercepts between the two groups, and beta2 is the common slope that occurs between the two groups
+- beta1 is about equal to the marginal effect
+
+
 ---
 ## Discussion
 ### Some things to note in this simulation
@@ -77,7 +84,7 @@ points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon
 
 ---
 ## Simulation 2
-```{r, fig.height=5, fig.width=5, echo = FALSE, results='hide'}
+```{r, fig.height=5, fig.width=5, echo = FALSE, results='hide', results = asis}
 n <- 100; t <- rep(c(0, 1), c(n/2, n/2)); x <- c(runif(n/2), 1.5 + runif(n/2));
 beta0 <- 0; beta1 <- 2; tau <- 0; sigma <- .2
 y <- beta0 + x * beta1 + t * tau + rnorm(n, sd = sigma)
@@ -91,6 +98,13 @@ abline(coef(fit)[1] + coef(fit)[3], coef(fit)[2], lwd = 3)
 points(x[1 : (n/2)], y[1 : (n/2)], pch = 21, col = "black", bg = "lightblue", cex = 2)
 points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon", cex = 2)
 ```
+
+- This goes to show that this is the exact opposite of what would happen in the scenario
+in which your randomized
+- For example, if y is blood pressure and groups are set between whether or not someone
+is on medication or not where X is cholesterol level (related perhaps to blood pressure) then based upon the cholesterol level one could predict what group a data point was in
+- As there is no instance of overlap between groups to have direct evident of what's going on for a specific value of X
+- There's no value of x we can hold constant and compare red versus blue directly. So this is a bad setting, where we're relying very heavily on the model to compare the group. 
 
 
 ---
@@ -123,6 +137,11 @@ points(x[1 : (n/2)], y[1 : (n/2)], pch = 21, col = "black", bg = "lightblue", ce
 points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon", cex = 2)
 ```
 
+- Here, the marginal effect of the red group is higher than that of the blue group, 
+HOWEVER, examining the difference between intercepts of group models (in comparison to difference between means) where blue is higher than red, the adjusted estimate is significant and the exact opposite of the unadjusted estimate
+- This is an example of the Simpson's Paradox - the idea that as you look at a variable as it relates to an outcomes, the effect reverse with the inclusion of another
+
+
 ---
 ## Discussion
 ### Some things to note in this simulation
@@ -151,6 +170,9 @@ points(x[1 : (n/2)], y[1 : (n/2)], pch = 21, col = "black", bg = "lightblue", ce
 points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon", cex = 2)
 ```
 
+- Virtually no marginal effect (non-significant effect if X is ignored) but significant effect if X is included.
+- 
+
 ---
 ## Discussion
 ### Some things to note in this simulation
@@ -177,10 +199,13 @@ points(x[1 : (n/2)], y[1 : (n/2)], pch = 21, col = "black", bg = "lightblue", ce
 points(x[(n/2 + 1) : n], y[(n/2 + 1) : n], pch = 21, col = "black", bg = "salmon", cex = 2)
 ```
 
+-Obviously, the slopes are different. And we know how to fit a model like this. If we were to fit a model that said, y = beta naught + beta 1 * our treatment effect, + beta 2 * x, + beta 3 treatment, * x + epsilon. That would fit two lines with different intercepts and different slopes, and we could get a fit like to this data set
+-
+
 ---
 ## Discussion
 ### Some things to note from this simulation
-* There is no such thing as a group effect here.
+* There is no such thing as a group(treatment) effect here.
   * The impact of group reverses itself depending on X.
   * Both intercept and slope depends on group.
 * Group status and X unrelated.
@@ -201,7 +226,8 @@ points(x1, y, pch = 21, col = "black", bg = co.pal[round((n - 1) * x2 + 1)], cex
 
 ---
 ### Do this to investigate the bivariate relationship
-```
+
+```{r}
 library(rgl)
 plot3d(x1, x2, y)
 ```
@@ -212,7 +238,8 @@ plot3d(x1, x2, y)
 plot(resid(lm(x1 ~ x2)), resid(lm(y ~ x2)), frame = FALSE, col = "black", bg = "lightblue", pch = 21, cex = 2)
 abline(lm(I(resid(lm(x1 ~ x2))) ~ I(resid(lm(y ~ x2)))), lwd = 2)
 ```
-
+- Here is the reisudal of y after having removd x2, the linear effect of x2, and the reisdual of x1 having removed the linear effect of x2
+- you can see x2 is strongly correlated to x2
 
 ---
 ## Discussion
