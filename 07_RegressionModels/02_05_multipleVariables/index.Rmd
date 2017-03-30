@@ -114,6 +114,9 @@ round(apply(betas, 1, sd), 5)
 - What happens to the variability and estimated coefficients? HUGE variance inflation
 - This goes to the general rule that if the variable you include is highly correlated to the thing you're interested in, you're going to inflate the variance more
 - So, need to concern yourself with putting highly correlated variabels into your regression model unnecessarily; if diastolic blood pressure is in the model and you add systolic blood pressure - basically the same thing/very correlated - it will increase the standard error of diastolic blood pressure
+- Similarly, if a model were to incorporate both height and weight (generally highly correlated) but necessary, may need to bite the bullet and deal with the extra standard error - but if it's unnecessary DON'T INCLUDE IT
+- Main point: the more correlated the covariants are to the regressors that you're interested in, the worse off you're going to be in terms of paying a penalty for increased standard deviation
+- If we omit variables that are important, we get bias. If we include variables that are unnecessary, we inflate standard errors. Especially if we include variables that are unnecessary that are correlated with our variable of interest
 
 ---
 ## Variance inflation factors
@@ -137,7 +140,7 @@ c(summary(lm(y ~ x1 + x2))$cov.unscaled[2,2],
 temp <- apply(betas, 1, var); temp[2 : 3] / temp[1]
 ```
 ---
-## Swiss data
+## Swiss data Variance Inflation
 ```{r}
 data(swiss); 
 fit1 <- lm(Fertility ~ Agriculture, data = swiss)
@@ -154,8 +157,16 @@ fit3 <- update(fit, Fertility ~ Agriculture + Examination + Education)
 library(car)
 fit <- lm(Fertility ~ . , data = swiss)
 vif(fit)
+```
+
+- Looking at first line, Agriculture value is ~2, meaning the standard error for the agriculture effect is double of what it would be if it were orthogonal to all the other regressors
+- Others are quite high (Examination, Education) because they are highly related
+
+
+```{r}
 sqrt(vif(fit)) #I prefer sd 
 ```
+- These values reflect the increase in Standard Deviation
 
 ---
 ## What about residual variance estimation?
@@ -182,3 +193,12 @@ fit3 <- update(fit, Fertility ~ Agriculture + Examination + Education)
 fit5 <- update(fit, Fertility ~ Agriculture + Examination + Education + Catholic + Infant.Mortality)
 anova(fit1, fit3, fit5)
 ```
+
+- Res.Df: Residual Degrees of Freedom - number of data points minus number of parameters
+- RSS: Residual Sums of Squares
+- Df: Excess degrees of freedom - degrees of freedome between models
+- Sum of Sq: Sum of Squares
+- F: F Statistic
+
+- What the P value tells you is that the inclusion of the other parameters appear to be necessary beyond just the parameters included in model 1 and model 2
+- 
