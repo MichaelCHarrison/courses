@@ -37,7 +37,7 @@ $e_i = Y_i -  \hat Y_i =  Y_i - \sum_{k=1}^p X_{ik} \hat \beta_j$
 * Our estimate of residual variation is $\hat \sigma^2 = \frac{\sum_{i=1}^n e_i^2}{n-p}$, the $n-p$ so that $E[\hat \sigma^2] = \sigma^2$
 
 ---
-```{r, fig.height = 5, fig.width = 5}
+```{r, fig.height = 5, fig.width = 5, cache = T}
 data(swiss); par(mfrow = c(2, 2))
 fit <- lm(Fertility ~ . , data = swiss); plot(fit)
 ```
