@@ -91,11 +91,15 @@ betas <- sapply(1 : nosim, function(i){
 round(apply(betas, 1, sd), 5)
 ```
 
+-This is sort of the ideal setting, where the three regressors don't have anything to do with one another; the standard deviation across all simulations is more or less equal
+-Thus, the variance inflation by including extra variables x2 and x3 was negligable 
+
 ---
 ## Variance inflation
 ```{r, echo = TRUE}
 n <- 100; nosim <- 1000
-x1 <- rnorm(n); x2 <- x1/sqrt(2) + rnorm(n) /sqrt(2)
+x1 <- rnorm(n); 
+x2 <- x1/sqrt(2) + rnorm(n) /sqrt(2)
 x3 <- x1 * 0.95 + rnorm(n) * sqrt(1 - 0.95^2); 
 betas <- sapply(1 : nosim, function(i){
   y <- x1 + rnorm(n, sd = .3)
@@ -106,6 +110,10 @@ betas <- sapply(1 : nosim, function(i){
 round(apply(betas, 1, sd), 5)
 ```
 
+- Now regressors depend heavily on x1
+- What happens to the variability and estimated coefficients? HUGE variance inflation
+- This goes to the general rule that if the variable you include is highly correlated to the thing you're interested in, you're going to inflate the variance more
+- So, need to concern yourself with putting highly correlated variabels into your regression model unnecessarily; if diastolic blood pressure is in the model and you add systolic blood pressure - basically the same thing/very correlated - it will increase the standard error of diastolic blood pressure
 
 ---
 ## Variance inflation factors
