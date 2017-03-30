@@ -44,7 +44,7 @@ fit <- lm(Fertility ~ . , data = swiss); plot(fit)
 
 ---
 ## Influential, high leverage and outlying points
-```{r, fig.height = 5, fig.width=5, echo = FALSE, results='hide'}
+```{r, fig.height = 5, fig.width=5, echo = FALSE, results='hide', cache=TRUE }
 n <- 100; x <- rnorm(n); y <- x + rnorm(n, sd = .3)
 plot(c(-3, 6), c(-3, 6), type = "n", frame = FALSE, xlab = "X", ylab = "Y")
 abline(lm(y ~ x), lwd = 2)
@@ -71,7 +71,7 @@ Calling a point an outlier is vague.
 * Do `?influence.measures` to see the full suite of influence measures in stats. The measures include
   * `rstandard` - standardized residuals, residuals divided by their standard deviations)
   * `rstudent` - standardized residuals, residuals divided by their standard deviations, where the ith data point was deleted in the calculation of the standard deviation for the residual to follow a t distribution
-  * `hatvalues` - measures of leverage
+  * `hatvalues` - measures of leverage; acceptional for checking data entry errors 
   * `dffits` - change in the predicted response when the $i^{th}$ point is deleted in fitting the model.
   * `dfbetas` - change in individual coefficients when the $i^{th}$ point is deleted in fitting the model.
   * `cooks.distance` - overall change in teh coefficients when the $i^{th}$ point is deleted.
@@ -99,6 +99,8 @@ plot(x, y, frame = FALSE, cex = 2, pch = 21, bg = "lightblue", col = "black")
 abline(lm(y ~ x))            
 ```
 
+- Correlation suggested solely due to the existence of the outlier; point cloud offers no pattern without outlier present 
+
 ---
 ## The code
 ```
@@ -113,8 +115,13 @@ abline(lm(y ~ x))
 ```{r}
 fit <- lm(y ~ x)
 round(dfbetas(fit)[1 : 10, 2], 3)
+```
+- this first point which is the ten, ten point is or as the magnitude larger of a dfbeta then, the remaining point.
+
+```{r}
 round(hatvalues(fit)[1 : 10], 3)
 ```
+-The hat value for this point is much larger than the hat values for the remaining points. The hat values have to be between zero and one. So and it's of course much larger than the other points. So if we are looking at these, we would obviously single this point out. 
 
 ---
 ## Case 2
