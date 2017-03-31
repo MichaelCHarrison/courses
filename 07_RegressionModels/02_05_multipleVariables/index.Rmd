@@ -201,4 +201,3 @@ anova(fit1, fit3, fit5)
 - F: F Statistic
 
 - What the P value tells you is that the inclusion of the other parameters appear to be necessary beyond just the parameters included in model 1 and model 2
-- 
