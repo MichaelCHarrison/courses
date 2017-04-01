@@ -48,6 +48,8 @@ knit_hooks$set(plot = knitr:::hook_plot_html)
 download.file("https://dl.dropboxusercontent.com/u/7710864/data/ravensData.rda"
               , destfile="./data/ravensData.rda",method="curl")
 load("./data/ravensData.rda")
+```
+```{r}
 head(ravensData)
 ```
 
@@ -182,7 +184,8 @@ exp(logRegRavens$coeff)
 exp(confint(logRegRavens))
 ```
 
-
+- The logistic regression coefficient can be interpreted as: there is a ~11% chance increase of a Raven's win for every point scored 
+- 
 ---
 
 ## ANOVA for logistic regression
